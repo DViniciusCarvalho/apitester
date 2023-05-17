@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./build/css/style.css">
+    <title>APITester</title>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="request__url__and__methods">
+            <div class="method__url">
+                <select class="method" value="get">
+                    <option value="get">GET</option>
+                    <option value="post">POST</option>
+                    <option value="put">PUT</option>
+                    <option value="delete">DELETE</option>
+                    <option value="patch">PATCH</option>
+                </select>
+                <input type="text" class="url" placeholder="Ex.: http://localhost:8080/users">
+            </div>
+            <button class="send__button">SEND</button>
+        </div>
+        <div class="add__request__header__wrapper">
+            <button class="add__request__header__button">
+                <div class="add__request__header__button__line"></div>
+                <div class="add__request__header__button__line"></div>
+            </button>
+        </div>
+        <table class="request__headers">
+            <thead class="request__headers__header">
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="request__headers__body">
+            </tbody>
+        </table>
+        <label class="label">Body:</label>
+        <pre class="request__body" contenteditable="true" spellcheck="false"></pre>
+        <label class="label">Response:</label>
+        <div class="response__data__wrapper">
+            <div class="response__data__status__code__wrapper">
+                <abbr class="response__data__latency" title="Response latency">
+                    0ms
+                </abbr>
+                <abbr class="response__data__bytes__size" title="Response size">
+                    0B
+                </abbr>
+                <abbr class="response__data__status__code ok" title="OK">
+                    200
+                </abbr>
+            </div>
+            <pre class="response__data"></pre>
+        </div>
+    </div>
+    <script src="./build/js/request.js"></script>
+</body>
+</html>

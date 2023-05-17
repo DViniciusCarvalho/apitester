@@ -1,0 +1,6 @@
+        const text = requestBodyElement.textContent!;
+        const textWithStringFormatted = text.replace(/"([^"]+)"/g, '<span class="string">$1</span>');
+        const textWithNumbersFormatted = textWithStringFormatted.replace(/\b\d+(\.\d+)?\b/g, '<span class="number">$&</span>');
+        const textWithBooleansFormatted = textWithNumbersFormatted.replace(/\b(true|false)\b/g, '<span class="boolean">$&</span>');
+        requestBodyElement.innerHTML = textWithBooleansFormatted;
+
