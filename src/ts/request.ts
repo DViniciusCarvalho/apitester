@@ -119,18 +119,20 @@ RequestParams | GetRequestParams {
 }
 
 async function doRequest(urlValue: string, requestConfig: RequestParams | GetRequestParams) {
-
-    const startTime = Date.now();
+    const LATENCY_DISPARITY = 6;
+    const startTime = performance.now();
+    console.log(startTime)
 
     try {
         const successfulResponse = await fetch(urlValue, requestConfig);
-        const finishTime = Date.now();
+        const finishTime = performance.now();
+        console.log(finishTime)
         const latency = Number((finishTime! - startTime).toFixed(0));
         return getRequestData(successfulResponse, latency);
     }
     catch(error: any) {
         if (error instanceof Response) {
-            const finishTime = Date.now();
+            const finishTime = performance.now();
             const latency = Number((finishTime! - startTime).toFixed(0));
             return getRequestData(error, latency);
         }

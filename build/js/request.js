@@ -78,16 +78,19 @@ function arrangeRequestConfig(method, headers, body) {
 }
 function doRequest(urlValue, requestConfig) {
     return __awaiter(this, void 0, void 0, function* () {
-        const startTime = Date.now();
+        const LATENCY_DISPARITY = 6;
+        const startTime = performance.now();
+        console.log(startTime);
         try {
             const successfulResponse = yield fetch(urlValue, requestConfig);
-            const finishTime = Date.now();
+            const finishTime = performance.now();
+            console.log(finishTime);
             const latency = Number((finishTime - startTime).toFixed(0));
             return getRequestData(successfulResponse, latency);
         }
         catch (error) {
             if (error instanceof Response) {
-                const finishTime = Date.now();
+                const finishTime = performance.now();
                 const latency = Number((finishTime - startTime).toFixed(0));
                 return getRequestData(error, latency);
             }
