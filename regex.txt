@@ -4,3 +4,4 @@
         const textWithBooleansFormatted = textWithNumbersFormatted.replace(/\b(true|false)\b/g, '<span class="boolean">$&</span>');
         requestBodyElement.innerHTML = textWithBooleansFormatted;
 
+                                   
