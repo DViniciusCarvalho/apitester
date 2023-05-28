@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+import { showRequestLatency } from "./DOM";
 const sendButton = document.querySelector(".send__button");
 const addHeaderButton = document.querySelector(".add__request__header__button");
 const requestHeadersParent = document.querySelector(".request__headers__body");
@@ -199,23 +198,6 @@ function getScientificNotation(bytesSize) {
         return acc;
     }, "");
     return formattedSize;
-}
-function showRequestLatency(latency) {
-    const latencyElement = document.querySelector(".response__data__latency");
-    const formattedLatency = `${latency.toFixed(0)}ms`;
-    latencyElement.textContent = formattedLatency;
-    latencyElement.classList.remove("good--latency");
-    latencyElement.classList.remove("average--latency");
-    latencyElement.classList.remove("bad--latency");
-    if (latency < 100) {
-        latencyElement.classList.add("good--latency");
-    }
-    else if (latency === 100 || latency <= 500) {
-        latencyElement.classList.add("average--latency");
-    }
-    else {
-        latencyElement.classList.add("bad--latency");
-    }
 }
 function handleAddHeader() {
     const garbageIconSource = "../../assets/delete.png";
