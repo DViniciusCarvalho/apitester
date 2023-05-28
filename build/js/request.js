@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const sendButton = document.querySelector(".send__button");
 const addHeaderButton = document.querySelector(".add__request__header__button");
 const requestHeadersParent = document.querySelector(".request__headers__body");
@@ -47,7 +48,7 @@ function getRequestHeaders() {
 function getRequestBody(method) {
     const requestBodyElement = document.querySelector(".request__body");
     const requestBodyContent = requestBodyElement.textContent;
-    if (method !== "GET") {
+    if (method !== "GET" && method !== "DELETE") {
         try {
             const requestBodyJSOnified = JSON.parse(requestBodyContent);
             const stringfiedData = JSON.stringify(requestBodyJSOnified);
@@ -60,7 +61,7 @@ function getRequestBody(method) {
     }
 }
 function arrangeRequestConfig(method, headers, body) {
-    if (method === "GET") {
+    if (method === "GET" || method == "DELETE") {
         const parameters = {
             method: "GET",
             headers: headers

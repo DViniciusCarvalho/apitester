@@ -1,34 +1,13 @@
+import { 
+    RequestParams, 
+    ListRetrieveDeleteRequestParams, 
+    BytesNotation, 
+    ResponseData 
+} from "./types/types";
+
 const sendButton = document.querySelector(".send__button") as HTMLButtonElement;
 const addHeaderButton = document.querySelector(".add__request__header__button") as HTMLButtonElement;
 const requestHeadersParent = document.querySelector(".request__headers__body")!;
-
-interface RequestParams {
-    method: string;
-    headers: {[key: string]: string};
-    body: string;
-}
-
-interface GetRequestParams {
-    method: "GET";
-    headers: {[key: string]: string};
-}
-
-interface BytesNotation {
-    [key: string]: string | number;
-    prefix: string;
-    minBytes: number;
-}
-
-interface ResponseData {
-    status: number; 
-    statusText: string;
-    ok: boolean; 
-    data: any;
-    headers: Headers
-    body: ReadableStream<Uint8Array> | null;
-    latency: number;
-}
-
 
 sendButton.addEventListener("click", handleSendButtonClick);
 addHeaderButton.addEventListener("click", handleAddHeader);
@@ -85,7 +64,7 @@ function getRequestBody(method: string): string | void {
     const requestBodyElement = document.querySelector(".request__body") as HTMLPreElement;
     const requestBodyContent = requestBodyElement.textContent as string;
 
-    if (method !== "GET") {
+    if (method !== "GET" && method !== "DELETE") {
         try {
             const requestBodyJSOnified = JSON.parse(requestBodyContent);
             const stringfiedData = JSON.stringify(requestBodyJSOnified);
@@ -99,10 +78,14 @@ function getRequestBody(method: string): string | void {
     }
 }
 
-function arrangeRequestConfig(method: string, headers: {[key: string]: string}, body?: string | void): 
-RequestParams | GetRequestParams {
-    if (method === "GET") {
-        const parameters: GetRequestParams = {
+function arrangeRequestConfig(
+    method: string, 
+    headers: {[key: string]: string}, 
+    body?: string | void
+): RequestParams | ListRetrieveDeleteRequestParams {
+
+    if (method === "GET" || method == "DELETE") {
+        const parameters: ListRetrieveDeleteRequestParams = {
             method: "GET",
             headers: headers
         };
@@ -118,7 +101,11 @@ RequestParams | GetRequestParams {
     }
 }
 
-async function doRequest(urlValue: string, requestConfig: RequestParams | GetRequestParams) {
+async function doRequest(
+    urlValue: string, 
+    requestConfig: RequestParams | ListRetrieveDeleteRequestParams
+): Promise<ResponseData | undefined> {
+
     const startTime = performance.now();
 
     try {
