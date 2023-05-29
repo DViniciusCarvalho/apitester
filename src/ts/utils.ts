@@ -1,6 +1,7 @@
 import { DataUnity } from "./types/data";
 
 export function getScientificNotation(bytesSize: number): string {
+
     const bytesNotation: DataUnity.BytesNotation[] = [
         {
             prefix: "",
@@ -43,9 +44,13 @@ export function getScientificNotation(bytesSize: number): string {
     }, "");
 
     return formattedSize;
+
 }
 
 export function methodNeedBody(method: string): boolean {
+
     const bodyNeededMethods = ["POST", "PUT", "PATCH"];
+    
     return method in bodyNeededMethods;
+
 }

@@ -19,6 +19,7 @@ addHeaderButton.addEventListener("click", () => handleAddHeader(requestHeadersPa
 
 
 async function handleSendButtonClick(): Promise<void> {
+    
     const urlElement = document.querySelector(".url") as HTMLInputElement;
     const requestURL = urlElement.value;
     const requestMethod = getRequestMethod();
@@ -37,19 +38,23 @@ async function handleSendButtonClick(): Promise<void> {
     } = await (doRequest(requestURL, requestConfig) as Promise<Responses.ResponseData>);
 
     handleShowRequestResponse(status, statusText, ok, data, headers, body, latency);
+
 }
 
 
 function getRequestMethod(): string {
+
     const methodElement = document.querySelector(".method") as HTMLSelectElement;
     const methodLowerCase = methodElement.value;
     const methodUpperCase = methodLowerCase.toUpperCase();
 
     return methodUpperCase;
+
 }
 
 
 function getRequestHeaders(): {[key: string]: string} {
+
     const headersTableRows = requestHeadersParent.children;
 
     const headers = Array.from(headersTableRows).reduce((acc, currentRow) => {
@@ -66,10 +71,12 @@ function getRequestHeaders(): {[key: string]: string} {
     }, {} as {[key: string]: string});
 
     return headers;
+
 }
 
 
 function getRequestBody(method: string): string | void {
+
     const requestBodyElement = document.querySelector(".request__body") as HTMLPreElement;
     const requestBodyContent = requestBodyElement.textContent as string;
 
@@ -85,6 +92,7 @@ function getRequestBody(method: string): string | void {
     
         throw Error;
     }
+
 }
 
 
@@ -110,6 +118,7 @@ function arrangeRequestConfig(
         };
         return parameters;
     }
+
 }
 
 
@@ -173,4 +182,5 @@ function handleShowRequestResponse(
     showResponseData(data);
     showResponseDataBytesSize(headers, body);
     showRequestLatency(latency);
+
 }
