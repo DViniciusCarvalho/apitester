@@ -11,7 +11,6 @@ export function showHTTPStatus(status: number, statusText: string, ok: boolean):
 
 }
 
-
 function changeStatusElementClass(statusElement: HTMLElement, ok: boolean): void {
 
     const statusElementHasNotOkClass = statusElement?.classList.contains("not--ok");

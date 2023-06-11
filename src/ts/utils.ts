@@ -24,10 +24,9 @@ export function getScientificNotation(bytesSize: number): string {
     const formattedSize = bytesNotation.reduce((acc, notation, index) => {
         const isEqualOrGreaterThanCurrentNotation = bytesSize >= notation.minBytes;
         const nextIndex = index + 1;
-        const nextNotationMinBytes = (<DataUnity.BytesNotation> bytesNotation[nextIndex]).minBytes;
         const nextNotationExists = nextIndex < bytesNotation.length;
         const isLessThanNextNotation = bytesNotation[nextIndex]
-        ? bytesSize < nextNotationMinBytes
+        ? bytesSize < (<DataUnity.BytesNotation> bytesNotation[nextIndex]).minBytes
         : false;
 
         if (isEqualOrGreaterThanCurrentNotation && nextNotationExists && isLessThanNextNotation) {

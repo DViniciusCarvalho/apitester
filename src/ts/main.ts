@@ -1,5 +1,6 @@
 import { Requests } from "./types/requests";
 import { Responses } from "./types/responses";
+import { DataUnity } from "./types/data";
 import { 
     handleAddHeader, 
     showHTTPStatus, 
@@ -35,7 +36,7 @@ async function handleSendButtonClick(): Promise<void> {
         headers,
         body, 
         latency 
-    } = await (doRequest(requestURL, requestConfig) as Promise<Responses.ResponseData>);
+    } = await doRequest(requestURL, requestConfig);
 
     handleShowRequestResponse(status, statusText, ok, data, headers, body, latency);
 
@@ -129,22 +130,16 @@ async function doRequest(
 
     const startTime = performance.now();
 
-    try {
-        const successfulResponse = await fetch(urlValue, requestConfig);
-        const finishTime = performance.now();
-        const latency = Number((finishTime! - startTime).toFixed(0));
-        return getRequestData(successfulResponse, latency);
-    }
-    catch(error) {
-        const finishTime = performance.now();
-        const latency = Number((finishTime! - startTime).toFixed(0));
-        return getRequestData(error, latency);
-    }
+    const successfulResponse = await fetch(urlValue, requestConfig);
 
+    const finishTime = performance.now();
+    const latency = Number((finishTime! - startTime).toFixed(0));
+
+    return getRequestData(successfulResponse, latency);
 }
 
 
-async function getRequestData(response: any, latency: number): Promise<Responses.ResponseData> {
+async function getRequestData(response: Response, latency: number): Promise<Responses.ResponseData> {
 
     const { 
         status, 
@@ -154,7 +149,7 @@ async function getRequestData(response: any, latency: number): Promise<Responses
         body 
     } = response as Response;
 
-    const data = await (response as Response).json();
+    const data = await response.json().then(data => data).catch(err => statusText);
 
     return { 
         status, 
@@ -182,5 +177,4 @@ function handleShowRequestResponse(
     showResponseData(data);
     showResponseDataBytesSize(headers, body);
     showRequestLatency(latency);
-
 }
