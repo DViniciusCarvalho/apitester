@@ -9,6 +9,10 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  watch: true,
+  watchOptions: {
+    ignored: /node_modules/,
+  },
   module: {
     rules: [
       {
