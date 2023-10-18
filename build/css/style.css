@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap");
 *, *::before, *::after {
-  padding: 0;
+  padding: 0px;
   margin: 0;
   border: none;
   box-sizing: border-box;
@@ -8,15 +8,18 @@
   text-decoration: none;
 }
 
-html, body {
+html {
   height: 100%;
   width: 100%;
 }
 
 body {
+  height: 100%;
+  min-height: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 50px 0px;
   background-color: rgb(27, 27, 34);
 }
 
@@ -36,7 +39,8 @@ body {
   gap: 2%;
   width: 98%;
   max-width: 800px;
-  height: 90%;
+  height: 55%;
+  min-height: 700px;
   background-color: rgb(37, 37, 46);
   padding: 20px;
   border: 0.00001px solid rgba(255, 255, 255, 0.432);

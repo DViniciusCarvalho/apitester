@@ -13,5 +13,8 @@
   "main": "webpack.config.js",
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "sass": "^1.68.0"
+  }
 }

@@ -1,40 +1,53 @@
-import { getScientificNotation } from "./utils";
+import { RANDOM_STATUS_NUMBER_WHEN_NETWORK_ERR } from './main';
+import { getScientificNotation } from './utils';
 
 
-export function showHTTPStatus(status: number, statusText: string, ok: boolean): void {
+export function showHTTPStatus(
+    status: number, 
+    statusText: string, 
+    ok: boolean
+): void {
     
-    const statusElement = document.querySelector(".response__data__status__code") as HTMLElement;
+    const statusElement = document.querySelector('.response__data__status__code') as HTMLElement;
     changeStatusElementClass(statusElement, ok);
     const statusElementText = status.toString();
-    statusElement!.textContent = statusElementText;
-    statusElement.title = statusText;
 
+    statusElement!.textContent = status === RANDOM_STATUS_NUMBER_WHEN_NETWORK_ERR
+                                 ? '?'
+                                 : statusElementText;
+
+    statusElement.title = statusText;
 }
 
-function changeStatusElementClass(statusElement: HTMLElement, ok: boolean): void {
 
-    const statusElementHasNotOkClass = statusElement?.classList.contains("not--ok");
-    const statusElementHasOkClass = statusElement?.classList.contains("ok");
+function changeStatusElementClass(
+    statusElement: HTMLElement, 
+    ok: boolean
+): void {
+
+    const statusElementHasNotOkClass = statusElement?.classList.contains('not--ok');
+    const statusElementHasOkClass = statusElement?.classList.contains('ok');
 
     if (ok) {
         if (statusElementHasNotOkClass) {
-            statusElement?.classList.remove("not--ok");
+            statusElement?.classList.remove('not--ok');
         }
-        statusElement?.classList.add("ok");
+        statusElement?.classList.add('ok');
     }
     else {
         if (statusElementHasOkClass) {
-            statusElement?.classList.remove("ok");
+            statusElement?.classList.remove('ok');
         }
-        statusElement?.classList.add("not--ok");
+        statusElement?.classList.add('not--ok');
     }
-
 }
 
 
-export function showResponseData(data: any): void {
+export function showResponseData(
+    data: any
+): void {
 
-    const responseDataElement = document.querySelector(".response__data") as HTMLPreElement;
+    const responseDataElement = document.querySelector('.response__data') as HTMLPreElement;
     const formattedResponseData = JSON.stringify(data, null, 4);
     const colorfulFormattedResponseData = formattedResponseData
         .replace(/"([^"]*)"/g, '<span class="string">"$1"</span>')
@@ -42,13 +55,15 @@ export function showResponseData(data: any): void {
         .replace(/\b(true|false)\b/g, '<span class="boolean">$&</span>');
 
     responseDataElement.innerHTML = colorfulFormattedResponseData;
-
 }
 
 
-export function showResponseDataBytesSize(headers: Headers | null, body: ReadableStream<Uint8Array> | null): void {
+export function showResponseDataBytesSize(
+    headers: Headers | null, 
+    body: ReadableStream<Uint8Array> | null
+): void {
 
-    const bytesSizeElement = document.querySelector(".response__data__bytes__size") as HTMLElement;
+    const bytesSizeElement = document.querySelector('.response__data__bytes__size') as HTMLElement;
     const contentLength = headers?.get('content-length');
 
     const bytesSize = (() => {
@@ -65,44 +80,49 @@ export function showResponseDataBytesSize(headers: Headers | null, body: Readabl
     })();
 
     const formattedBytesSize = `${getScientificNotation(bytesSize)}B`;
+    
     bytesSizeElement.textContent = formattedBytesSize;
-
 }
 
 
-export function showRequestLatency(latency: number): void {
+export function showRequestLatency(
+    latency: number
+): void {
 
-    const latencyElement = document.querySelector(".response__data__latency") as HTMLElement;
-    const formattedLatency = `${latency.toFixed(0)}ms`
+    const latencyElement = document.querySelector('.response__data__latency') as HTMLElement;
+    const formattedLatency = `${latency.toFixed(0)}ms`;
+
     latencyElement.textContent = formattedLatency;
 
-    latencyElement.classList.remove("good--latency");
-    latencyElement.classList.remove("average--latency");
-    latencyElement.classList.remove("bad--latency");
+    latencyElement.classList.remove('good--latency');
+    latencyElement.classList.remove('average--latency');
+    latencyElement.classList.remove('bad--latency');
 
     if (latency < 100) {
-        latencyElement.classList.add("good--latency");
+        latencyElement.classList.add('good--latency');
     }
     else if (latency === 100 || latency <= 500) {
-        latencyElement.classList.add("average--latency");
+        latencyElement.classList.add('average--latency');
     }
     else {
-        latencyElement.classList.add("bad--latency");
+        latencyElement.classList.add('bad--latency');
     }
 
 }
 
 
-export function handleAddHeader(requestHeadersParent: HTMLElement): void {
+export function handleAddHeader(
+    requestHeadersParent: HTMLElement
+): void {
 
-    const garbageIconSource = "../../assets/delete.png";
+    const garbageIconSource = '../../assets/delete.png';
 
-    const rowElement = document.createElement("tr");
+    const rowElement = document.createElement('tr');
     requestHeadersParent.appendChild(rowElement);
 
-    const keyCellElement = document.createElement("td");
-    keyCellElement.setAttribute("contenteditable", "true");
-    keyCellElement.setAttribute("spellcheck", "false");
+    const keyCellElement = document.createElement('td');
+    keyCellElement.setAttribute('contenteditable', 'true');
+    keyCellElement.setAttribute('spellcheck', 'false');
     rowElement.appendChild(keyCellElement);
 
     const valueCellElement = document.createElement("td");
@@ -120,19 +140,20 @@ export function handleAddHeader(requestHeadersParent: HTMLElement): void {
     deleteIconCellElement.appendChild(deleteIconImage);
 
     keyCellElement.focus();
-
 }
 
 
-function removeRowFromDOM(event: MouseEvent, requestHeadersParent: HTMLElement): void {
+function removeRowFromDOM(
+    event: MouseEvent, requestHeadersParent: HTMLElement
+): void {
 
     const targetElement = event.target! as HTMLElement;
     const row = targetElement.parentElement?.parentElement;
+
     requestHeadersParent.removeChild(row!);
 
     event.target?.removeEventListener(
         "click", 
         (e) => removeRowFromDOM(e as MouseEvent, requestHeadersParent)
     );
-
 }

@@ -1,22 +1,25 @@
-import { DataUnity } from "./types/data";
+import { DataUnity } from './types/data';
 
-export function getScientificNotation(bytesSize: number): string {
+
+export function getScientificNotation(
+    bytesSize: number
+): string {
 
     const bytesNotation: DataUnity.BytesNotation[] = [
         {
-            prefix: "",
+            prefix: '',
             minBytes: 0
         },
         {
-            prefix: "K",
+            prefix: 'K',
             minBytes: 1024
         },
         {
-            prefix: "M",
+            prefix: 'M',
             minBytes: Math.pow(1024, 2)
         },
         {
-            prefix: "G",
+            prefix: 'G',
             minBytes: Math.pow(1024, 3)
         }
     ];
@@ -40,16 +43,17 @@ export function getScientificNotation(bytesSize: number): string {
 
         return acc;
 
-    }, "");
+    }, '');
 
     return formattedSize;
-
 }
 
-export function methodNeedBody(method: string): boolean {
 
-    const bodyNeededMethods = ["POST", "PUT", "PATCH"];
+export function methodNeedBody(
+    method: string
+): boolean {
+
+    const BODY_NEEDED_HTTP_METHODS = ['POST', 'PUT', 'PATCH'];
     
-    return method in bodyNeededMethods;
-
+    return method in BODY_NEEDED_HTTP_METHODS;
 }

@@ -1,31 +1,34 @@
-import { Requests } from "./types/requests";
-import { Responses } from "./types/responses";
-import { DataUnity } from "./types/data";
+import { Requests } from './types/requests';
+import { Responses } from './types/responses';
 import { 
     handleAddHeader, 
     showHTTPStatus, 
     showResponseData, 
     showResponseDataBytesSize, 
     showRequestLatency 
-} from "./dom";
-import { methodNeedBody } from "./utils";
+} from './dom';
+import { methodNeedBody } from './utils';
 
+export const RANDOM_STATUS_NUMBER_WHEN_NETWORK_ERR = 999;
+const RANDOM_STATUS_TEXT_WHEN_NETWOR_ERR = 'Unknown';
 
-const sendButton = document.querySelector(".send__button") as HTMLButtonElement;
-const addHeaderButton = document.querySelector(".add__request__header__button") as HTMLButtonElement;
-const requestHeadersParent = document.querySelector(".request__headers__body")! as HTMLElement;
+const sendButton = document.querySelector('.send__button') as HTMLButtonElement;
+const addHeaderButton = document.querySelector('.add__request__header__button') as HTMLButtonElement;
+const requestHeadersParent = document.querySelector('.request__headers__body')! as HTMLElement;
 
-sendButton.addEventListener("click", handleSendButtonClick);
-addHeaderButton.addEventListener("click", () => handleAddHeader(requestHeadersParent));
+sendButton.addEventListener('click', handleSendButtonClick);
+addHeaderButton.addEventListener('click', () => handleAddHeader(requestHeadersParent));
 
 
 async function handleSendButtonClick(): Promise<void> {
     
-    const urlElement = document.querySelector(".url") as HTMLInputElement;
+    const urlElement = document.querySelector('.url') as HTMLInputElement;
+
     const requestURL = urlElement.value;
     const requestMethod = getRequestMethod();
     const requestHeaders = getRequestHeaders();
     const requestBody = getRequestBody(requestMethod);
+
     const requestConfig = arrangeRequestConfig(requestMethod, requestHeaders, requestBody);
 
     const { 
@@ -37,20 +40,27 @@ async function handleSendButtonClick(): Promise<void> {
         body, 
         latency 
     } = await doRequest(requestURL, requestConfig);
-
-    handleShowRequestResponse(status, statusText, ok, data, headers, body, latency);
+    
+    handleShowRequestResponse(
+        status, 
+        statusText, 
+        ok, 
+        data, 
+        headers, 
+        body, 
+        latency
+    );
 
 }
 
 
 function getRequestMethod(): string {
 
-    const methodElement = document.querySelector(".method") as HTMLSelectElement;
+    const methodElement = document.querySelector('.method') as HTMLSelectElement;
     const methodLowerCase = methodElement.value;
     const methodUpperCase = methodLowerCase.toUpperCase();
 
     return methodUpperCase;
-
 }
 
 
@@ -72,28 +82,29 @@ function getRequestHeaders(): {[key: string]: string} {
     }, {} as {[key: string]: string});
 
     return headers;
-
 }
 
 
-function getRequestBody(method: string): string | void {
+function getRequestBody(
+    method: string
+): string | void {
 
-    const requestBodyElement = document.querySelector(".request__body") as HTMLPreElement;
+    const requestBodyElement = document.querySelector('.request__body') as HTMLPreElement;
     const requestBodyContent = requestBodyElement.textContent as string;
 
     if (methodNeedBody(method)) {
         try {
             const requestBodyJSOnified = JSON.parse(requestBodyContent);
             const stringfiedData = JSON.stringify(requestBodyJSOnified);
+
             return stringfiedData;
         }
         catch(error) {
-            window.alert("Invalid data format. Strings must be between \" \"");
+            window.alert('Invalid data format. Strings must be between \" \"');
         }
     
         throw Error;
     }
-
 }
 
 
@@ -119,7 +130,6 @@ function arrangeRequestConfig(
         };
         return parameters;
     }
-
 }
 
 
@@ -130,16 +140,39 @@ async function doRequest(
 
     const startTime = performance.now();
 
-    const successfulResponse = await fetch(urlValue, requestConfig);
+    try {
+        const response = await fetch(urlValue, requestConfig);
 
-    const finishTime = performance.now();
-    const latency = Number((finishTime! - startTime).toFixed(0));
+        const finishTime = performance.now();
+        const latency = Number((finishTime! - startTime).toFixed(0));
 
-    return getRequestData(successfulResponse, latency);
+        return getRequestData(response, latency);
+    }
+    catch(err: any) {
+        const response = {
+            status: RANDOM_STATUS_NUMBER_WHEN_NETWORK_ERR,
+            statusText: RANDOM_STATUS_TEXT_WHEN_NETWOR_ERR,
+            ok: false,
+            headers: {
+                'content-length': err.message.length,
+                get: (key: string) => response.headers[key]
+            },
+            body: {},
+            json: () => new Promise(res => res(err.message))
+        } as any;
+
+        const finishTime = performance.now();
+        const latency = Number((finishTime! - startTime).toFixed(0));
+
+        return getRequestData(response, latency);
+    }
 }
 
 
-async function getRequestData(response: Response, latency: number): Promise<Responses.ResponseData> {
+async function getRequestData(
+    response: Response, 
+    latency: number
+): Promise<Responses.ResponseData> {
 
     const { 
         status, 
